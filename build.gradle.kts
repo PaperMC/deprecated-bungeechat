@@ -10,6 +10,7 @@ version = if (bungeeVersion.endsWith("-SNAPSHOT")) {
 } else {
     "$bungeeVersion-deprecated"
 }
+val deprecation = "BungeeCord Chat API has been deprecated in favor of Adventure API."
 
 indra {
     javaVersions().target(8)
@@ -46,8 +47,9 @@ dependencies {
     bungee("net.md-5:bungeecord-chat:$bungeeVersion")
     bungeeSourcesJar("net.md-5:bungeecord-chat:$bungeeVersion:sources")
 
+    // bungee deps (keep in sync with bungee version)
     api("com.google.code.gson:gson:2.8.8")
-    api("com.google.guava:guava:31.0.1-jre")
+    api("com.google.guava:guava:21.0")
 }
 
 tasks {
@@ -56,11 +58,13 @@ tasks {
         deprecator.set(layout.projectDirectory.file("deprecator.jar"))
         input.set(layout.file(bungeeJar.elements.map { it.single().asFile }))
         output.set(layout.buildDirectory.file("deprecated/jar.jar"))
+        deprecationMessage.set(deprecation)
     }
     val deprecateSourcesJar = register("deprecateSourcesJar", DeprecateJar::class) {
         deprecator.set(layout.projectDirectory.file("deprecator.jar"))
         input.set(layout.file(bungeeSourcesJar.elements.map { it.single().asFile }))
         output.set(layout.buildDirectory.file("deprecated/sources.jar"))
+        deprecationMessage.set(deprecation)
     }
     jar {
         from(zipTree(deprecateJar.flatMap { it.output }))
@@ -88,9 +92,12 @@ abstract class DeprecateJar : JavaExec() {
     @get:OutputFile
     abstract val output: RegularFileProperty
 
+    @get:Input
+    abstract val deprecationMessage: Property<String>
+
     override fun exec() {
         classpath(deprecator)
-        args(input.asFile.get().absolutePath, output.asFile.get().absolutePath, "--parallelism", "1")
+        args(input.asFile.get().absolutePath, output.asFile.get().absolutePath, "--parallelism", "1", "--message", deprecationMessage.get())
         super.exec()
     }
 }
