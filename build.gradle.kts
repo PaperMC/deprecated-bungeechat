@@ -10,7 +10,7 @@ version = if (bungeeVersion.endsWith("-SNAPSHOT")) {
 } else {
     "$bungeeVersion-deprecated"
 }
-val deprecation = "BungeeCord Chat API has been deprecated in favor of Adventure API."
+val deprecation = "BungeeCord Chat API has been deprecated in favor of Adventure API. For help with migrating your code, see https://docs.adventure.kyori.net/migration/bungeecord-chat-api.html"
 
 indra {
     javaVersions().target(8)
