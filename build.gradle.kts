@@ -1,6 +1,6 @@
 plugins {
     id("net.kyori.indra") version "2.1.1"
-    id("net.kyori.indra.publishing") version "2.1.1"
+    `maven-publish`
 }
 
 group = "net.md-5"
@@ -15,14 +15,6 @@ val deprecation = "BungeeCord Chat API has been deprecated in favor of Adventure
 
 indra {
     javaVersions().target(8)
-    publishAllTo(
-        "paper",
-        if (bungeeVersion.endsWith("-SNAPSHOT")) {
-            "https://papermc.io/repo/repository/maven-snapshots/"
-        } else {
-            "https://papermc.io/repo/repository/maven-releases/"
-        }
-    )
 }
 
 repositories {
@@ -78,6 +70,21 @@ tasks {
 val javaComponent = components["java"] as AdhocComponentWithVariants
 javaComponent.withVariantsFromConfiguration(configurations["javadocElements"]) {
     skip()
+}
+
+publishing {
+    val url = if (bungeeVersion.endsWith("-SNAPSHOT")) {
+        "https://papermc.io/repo/repository/maven-snapshots/"
+    } else {
+        "https://papermc.io/repo/repository/maven-releases/"
+    }
+    repositories.maven(url) {
+        name = "paper"
+        credentials(PasswordCredentials::class)
+    }
+    publications.create<MavenPublication>("maven") {
+        from(components["java"])
+    }
 }
 
 @CacheableTask
