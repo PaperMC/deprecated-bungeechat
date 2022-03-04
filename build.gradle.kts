@@ -4,11 +4,12 @@ plugins {
 }
 
 group = "net.md-5"
+val ghRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.let { "build.$it" } ?: "local"
 val bungeeVersion = "1.16-R0.4"
 version = if (bungeeVersion.endsWith("-SNAPSHOT")) {
     "${bungeeVersion.replace("-SNAPSHOT", "")}-deprecated-SNAPSHOT"
 } else {
-    "$bungeeVersion-deprecated"
+    "$bungeeVersion-deprecated+$ghRunNumber"
 }
 val deprecation = "BungeeCord Chat API has been deprecated in favor of Adventure API. For help with migrating your code, see <a href=\"https://docs.adventure.kyori.net/migration/bungeecord-chat-api.html\">https://docs.adventure.kyori.net/migration/bungeecord-chat-api.html</a>"
 
