@@ -5,7 +5,7 @@ plugins {
 
 group = "net.md-5"
 val ghRunNumber = System.getenv("GITHUB_RUN_NUMBER")?.let { "build.$it" } ?: "local"
-val bungeeVersion = "1.20-R0.2"
+val bungeeVersion = "1.21-R0.2"
 version = if (bungeeVersion.endsWith("-SNAPSHOT")) {
     "${bungeeVersion.replace("-SNAPSHOT", "")}-deprecated-SNAPSHOT"
 } else {
