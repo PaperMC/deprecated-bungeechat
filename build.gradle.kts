@@ -74,9 +74,9 @@ javaComponent.withVariantsFromConfiguration(configurations["javadocElements"]) {
 
 publishing {
     val url = if (bungeeVersion.endsWith("-SNAPSHOT")) {
-        "https://papermc.io/repo/repository/maven-snapshots/"
+        "https://repo.papermc.io/repository/maven-snapshots/"
     } else {
-        "https://papermc.io/repo/repository/maven-releases/"
+        "https://repo.papermc.io/repository/maven-releases/"
     }
     repositories.maven(url) {
         name = "paper"
